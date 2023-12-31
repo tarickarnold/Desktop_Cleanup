@@ -31,16 +31,19 @@ def is_screenshot(file):
 
 os.chdir("C:/Users/arnol/Desktop")
 
-for file in os.listdir():
-    if is_audio(file):
-        shutil.move(file,"C:/Users/arnol/Music")
-    elif is_video(file):
-        shutil.move(file,"C:/Users/arnol/Video")
-    elif is_image(file):
-        if is_screenshot(file):
-            shutil.move(file, "C:/Users/arnol/Pictures/Saved Pictures")
+try:
+    for file in os.listdir():
+        if is_audio(file):
+            shutil.move(file,"C:/Users/arnol/Music")
+        elif is_video(file):
+            shutil.move(file,"C:/Users/arnol/Video")
+        elif is_image(file):
+            if is_screenshot(file):
+                shutil.move(file, "C:/Users/arnol/Pictures/Saved Pictures")
+            else:
+                shutil.move(file,"C:/Users/arnol/Pictures/Screenshots")
         else:
-            shutil.move(file,"C:/Users/arnol/Pictures/Screenshots")
-    else:
-        shutil.move(file, "C:/Users/arnol/Documents/Misc")
-print("File cleanup was successful!")
+            shutil.move(file, "C:/Users/arnol/Documents/Misc")
+    print("File cleanup was successful!")
+except: Exception
+print("Run failed")
