@@ -1,5 +1,9 @@
 import os
 import shutil
+import time
+from datetime import datetime
+from watchdog.observers import observers
+from watchdog.events import FileSystemEventHandler
 
 audio = (".3ga", ".aac", ".ac3", ".aif", ".aiff",
          ".alac", ".amr", ".ape", ".au", ".dss",
@@ -14,6 +18,12 @@ video = (".webm", ".MTS", ".M2TS", ".TS", ".mov",
 img = (".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".png",
        ".gif", ".webp", ".svg", ".apng", ".avif")
 
+sourceDir = 'C:/Users/arnol/Desktop'
+
+def createdirectory(filepath = None):
+    currentdate = datetime.now().strftime("%m-%d-%y")
+
+
 
 def is_audio(file):
     return os.path.splitext(file)[1] in audio
@@ -27,6 +37,13 @@ def is_video(file):
 def is_screenshot(file):
     name, ext = os.path.splitext(file)
     return (ext in img) and "screenshot" in name.lower()
+
+class MyHandler(FileSystemEventHandler):
+  pass
+
+observer = Observer()
+event_handler = MyHandler()
+
 
 
 os.chdir("C:/Users/arnol/Desktop")
