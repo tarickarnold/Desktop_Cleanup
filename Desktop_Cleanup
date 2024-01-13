@@ -1,19 +1,23 @@
 import pathlib
 import shutil
 import time
-from extensions import extension_paths
+from icecream import ic
+from Desktop_Cleanup.extensions import extension_paths
 from datetime import datetime
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-#Source directory folder path goes here.
-sourcedir = "C:/Users/arnol/Desktop"
+# Source directory folder path goes here
+desktop = pathlib.Path.home() / 'Desktop'
+
+# Destination directory folder path goes here
+destinationPath = pathlib.Path.home() / extension_paths[extensions]
 
 class WatchFolder:
     """Watch user's desktop folder and move appropriate location."""
 
 # Initialize Watcher
-    def __init__(self, directory, handler = FileSystemEventHandler()):
+    def __init__(self, directory='.', handler = FileSystemEventHandler()):
         self.observer = Observer()
         self.directory = directory
         self.handler = handler    
@@ -22,12 +26,20 @@ class WatchFolder:
 # Run Watcher to observe directory on a schedule
     def run(self):
         self.observer.schedule(self.handler,self.directory,recursive=True)
-        self.observer.start
+        self.observer.start()
         print("Watcher Running in {}/".format(self.directory))
+        try:
+            while True:
+                time.sleep(1)
+        except:
+            self.observer.stop()
+        self.observer.join()
+        print("\nWatcher Terminated\n")
 
-class MyHandler(FileSystemEventHandler):
+class MyEventHandler(FileSystemEventHandler):
     def on_modified(self, event):
-           
+        for files in desktop:
+            if
 
 
 
@@ -35,68 +47,6 @@ class MyHandler(FileSystemEventHandler):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # Tuple of Audio file formats
-# audio = (".3ga", ".aac", ".ac3", ".aif", ".aiff",
-#          ".alac", ".amr", ".ape", ".au", ".dss",
-#          ".flac", ".flv", ".m4a", ".m4b", ".m4p",
-#          ".mp3", ".mpga", ".ogg", ".oga", ".mogg",
-#          ".opus", ".qcp", ".tta", ".voc", ".wav",
-#          ".wma", ".wv")
-# # Tuple of Audio file formats
-# video = (".webm", ".MTS", ".M2TS", ".TS", ".mov",
-#          ".mp4", ".m4p", ".m4v", ".mxf")
-# # Tuple of Audio file formats
-# img = (".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".png",
-#        ".gif", ".webp", ".svg", ".apng", ".avif")
-
-# def is_audio(file):
-#     return os.path.splitext(file)[1] in audio
-
-# def is_image(file):
-#     return os.path.splitext(file)[1] in img
-
-# def is_video(file):
-#     return os.path.splitext(file)[1] in video
-
-# def is_screenshot(file):
-#     name, ext = os.path.splitext(file)
-#     return (ext in img) and "screenshot" in name.lower()
-
-# os.chdir("C:/Users/arnol/Desktop")
-
-# try:
-#     for file in os.listdir():
-#         if is_audio(file):
-#             shutil.move(file,"C:/Users/arnol/Music")
-#         elif is_video(file):
-#             shutil.move(file,"C:/Users/arnol/Video")
-#         elif is_image(file):
-#             if is_screenshot(file):
-#                 shutil.move(file, "C:/Users/arnol/Pictures/Saved Pictures")
-#             else:
-#                 shutil.move(file,"C:/Users/arnol/Pictures/Screenshots")
-#         else:
-#             shutil.move(file, "C:/Users/arnol/Documents/Misc")
-#     print("File cleanup was successful!")
-# except: Exception
-# print("Run failed")
+if __name__=="__main__":
+    w = Watcher(".", MyEventHandler())
+    w.run()
