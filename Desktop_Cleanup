@@ -2,7 +2,7 @@ import pathlib
 import shutil
 import time
 from icecream import ic
-from Desktop_Cleanup.extensions import extension_paths
+from extensions import extensions_folders
 from datetime import datetime
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -11,7 +11,7 @@ from watchdog.events import FileSystemEventHandler
 desktop = pathlib.Path.home() / 'Desktop'
 
 # Destination directory folder path goes here
-destinationPath = pathlib.Path.home() / extension_paths[extensions]
+basePath = pathlib.Path.home()
 
 class WatchFolder:
     """Watch user's desktop folder and move appropriate location."""
@@ -38,15 +38,13 @@ class WatchFolder:
 
 class MyEventHandler(FileSystemEventHandler):
     def on_modified(self, event):
-        for files in desktop:
-            if
+        for extensions in extensions_folders:
+            if not pathlib.Path.exists(basePath + extensions):
+                pathlib.Path.mkdir(basePath)
 
 
 
 
-
-
-
-if __name__=="__main__":
-    w = Watcher(".", MyEventHandler())
-    w.run()
+# if __name__=="__main__":
+#     w = Watcher(".", MyEventHandler())
+#     w.run()
