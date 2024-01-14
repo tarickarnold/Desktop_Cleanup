@@ -10,41 +10,78 @@ from watchdog.events import FileSystemEventHandler
 # Source directory folder path goes here
 desktop = pathlib.Path.home() / 'Desktop'
 
-# Destination directory folder path goes here
-basePath = pathlib.Path.home()
+# Destination directory folder path
+baseDestinationPath = 'C:/Users/arnol'
 
-class WatchFolder:
-    """Watch user's desktop folder and move appropriate location."""
+now = datetime.now()
+year = now.strftime("%Y")
+month = now.strftime("%m")
 
-# Initialize Watcher
-    def __init__(self, directory='.', handler = FileSystemEventHandler()):
-        self.observer = Observer()
-        self.directory = directory
-        self.handler = handler    
-        print("Watcher initialized")    
+year_exists = False
+month_exists = False
 
-# Run Watcher to observe directory on a schedule
-    def run(self):
-        self.observer.schedule(self.handler,self.directory,recursive=True)
-        self.observer.start()
-        print("Watcher Running in {}/".format(self.directory))
-        try:
-            while True:
-                time.sleep(1)
-        except:
-            self.observer.stop()
-        self.observer.join()
-        print("\nWatcher Terminated\n")
+# Get extensions from dictionary
+for extensions in extensions_folders.keys():
+    # Get files from desktop path
+    for files in desktop.glob('*'):
+        # Get extensions values to complete destination path
+        for path in extensions_folders.values():
+            destinationPath = baseDestinationPath + path
+            # Get month and year folder
+            if Path.exists(destinationPath + '/' + year):
+                year_exists = True
+                if pathlib.Path.exists(destinationPath + '/' + month + '/' + year):
+                    month_exists = True
+                    if extensions == files.suffix:
+                        shutil.move(desktop, destinationPath)
+                
+              
+        
+# class WatchFolder:
+#     """Watch user's desktop folder and move appropriate location."""
 
-class MyEventHandler(FileSystemEventHandler):
-    def on_modified(self, event):
-        for extensions in extensions_folders:
-            if not pathlib.Path.exists(basePath + extensions):
-                pathlib.Path.mkdir(basePath)
+# # Initialize Watcher
+#     def __init__(self, directory='.', handler = FileSystemEventHandler()):
+#         self.observer = Observer()
+#         self.directory = directory
+#         self.handler = handler    
+#         print("Watcher initialized")    
+
+# # Run Watcher to observe directory on a schedule
+#     def run(self):
+#         self.observer.schedule(self.handler,self.directory,recursive=True)
+#         self.observer.start()
+#         print("Watcher Running in {}/".format(self.directory))
+#         try:
+#             while True:
+#                 time.sleep(1)
+#         except:
+#             self.observer.stop()
+#         self.observer.join()
+#         print("\nWatcher Terminated\n")
+
+# class MyEventHandler(FileSystemEventHandler):
+#     def on_modified(self, event):
+        
+#         now = datetime.now()
+#         year = now.strftime("%Y")
+#         month = now.strftime("%m")
+
+#         destinationPath = extensions_folders[extension]
+#         year_exists = False
+#         month_exists = False
+
+
+
+        
+        
+        #for extensions in extensions_folders:
+            #if not pathlib.Path.exists(basePath + extensions):
+               # pathlib.Path.mkdir(basePath)
 
 
 
 
 # if __name__=="__main__":
-#     w = Watcher(".", MyEventHandler())
-#     w.run()
+#   w = Watcher(".", MyEventHandler())
+#   w.run()

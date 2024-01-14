@@ -1,6 +1,6 @@
 extensions_folders = {
-#No name
-    'noname' : "/Desktop/newDesktop/Other/Uncategorized",
+#NoName
+    'NoName' : "/Documents/Other/Uncategorized",
 #Audio
     '.aif' : "/Music/Media/Audio",
     '.cda' : "/Music/Media/Audio",
