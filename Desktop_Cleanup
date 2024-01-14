@@ -20,31 +20,21 @@ month = now.strftime("%m")
 year_exists = False
 month_exists = False
 
-# Get extensions from dictionary
-for extensions in extensions_folders.keys():
-    # Get files from desktop path
-    for files in desktop.glob('*'):
-        while extensions == files.suffix:
-        # Get extensions values to complete destination path
-            for path in extensions_folders.values():
-                destinationPath = baseDestinationPath + path
-                yearPath = destinationPath + '/' + year
-                monthPath = yearPath + '/' + month
-                # Get month and year folder
-                if pathlib.Path(yearPath).exists():
-                    year_exists = True
-                    if pathlib.Path(monthPath).exists():
-                        month_exists = True
-                        shutil.move(str(files), str(monthPath))
-       
-              
-
-if not pathlib.Path(yearPath).exists():
-    pathlib.Path(yearPath).mkdir(parents=True, exist_ok=True)
-if not pathlib.Path(monthPath).exists():
-    pathlib.Path(monthPath).mkdir(parent=True, exists_ok= True)
-
-
+for files in desktop.glob('*'):
+    for extensions in extensions_folders.keys():
+        path = extensions_folders[extensions]
+        if extensions == files.suffix:
+            destinationPath = baseDestinationPath + path
+            yearPath = destinationPath + '/' + year
+            monthPath = yearPath + '/' + month
+            if pathlib.Path(yearPath).exists():
+                year_exists = True
+            else: pathlib.Path(yearPath).mkdir(parents=True, exist_ok=False)
+            if pathlib.Path(monthPath).exists():
+                month_exists = True
+            else: pathlib.Path(monthPath).mkdir(parents=True, exist_ok=False)
+            shutil.move(files, monthPath)
+            
 
 
 # class WatchFolder:
@@ -72,26 +62,4 @@ if not pathlib.Path(monthPath).exists():
 
 # class MyEventHandler(FileSystemEventHandler):
 #     def on_modified(self, event):
-        
-#         now = datetime.now()
-#         year = now.strftime("%Y")
-#         month = now.strftime("%m")
-
-#         destinationPath = extensions_folders[extension]
-#         year_exists = False
-#         month_exists = False
-
-
-
-        
-        
-        #for extensions in extensions_folders:
-            #if not pathlib.Path.exists(basePath + extensions):
-               # pathlib.Path.mkdir(basePath)
-
-
-
-
-# if __name__=="__main__":
-#   w = Watcher(".", MyEventHandler())
-#   w.run()
+#       print()
