@@ -24,19 +24,29 @@ month_exists = False
 for extensions in extensions_folders.keys():
     # Get files from desktop path
     for files in desktop.glob('*'):
+        while extensions == files.suffix:
         # Get extensions values to complete destination path
-        for path in extensions_folders.values():
-            destinationPath = baseDestinationPath + path
-            # Get month and year folder
-            if Path.exists(destinationPath + '/' + year):
-                year_exists = True
-                if pathlib.Path.exists(destinationPath + '/' + month + '/' + year):
-                    month_exists = True
-                    if extensions == files.suffix:
-                        shutil.move(desktop, destinationPath)
-                
+            for path in extensions_folders.values():
+                destinationPath = baseDestinationPath + path
+                yearPath = destinationPath + '/' + year
+                monthPath = yearPath + '/' + month
+                # Get month and year folder
+                if pathlib.Path(yearPath).exists():
+                    year_exists = True
+                    if pathlib.Path(monthPath).exists():
+                        month_exists = True
+                        shutil.move(str(files), str(monthPath))
+       
               
-        
+
+if not pathlib.Path(yearPath).exists():
+    pathlib.Path(yearPath).mkdir(parents=True, exist_ok=True)
+if not pathlib.Path(monthPath).exists():
+    pathlib.Path(monthPath).mkdir(parent=True, exists_ok= True)
+
+
+
+
 # class WatchFolder:
 #     """Watch user's desktop folder and move appropriate location."""
 

@@ -1,6 +1,17 @@
 extensions_folders = {
 #NoName
     'NoName' : "/Documents/Other/Uncategorized",
+#Text
+    '.txt' : "/Documents/Text/TextFiles",
+    '.doc' : "/Documents/Text/Microsoft/Word",
+    '.docx' : "/Documents/Text/Microsoft/Word",
+    '.odt ' : "/Documents/Text/TextFiles",
+    '.pdf': "/Documents/Text/PDF",
+    '.rtf': "/Documents/Text/TextFiles",
+    '.tex': "/Documents/Text/TextFiles",
+    '.wks ': "/Documents/Text/TextFiles",
+    '.wps': "/Documents/Text/TextFiles",
+    '.wpd': "/Documents/Text/TextFiles",
 #Audio
     '.aif' : "/Music/Media/Audio",
     '.cda' : "/Music/Media/Audio",
@@ -13,17 +24,6 @@ extensions_folders = {
     '.wma' : "/Music/Media/Audio",
     '.wpl' : "/Music/Media/Audio",
     '.m3u' : "/Music/Media/Audio",
-#Text
-    '.txt' : "/Documents/Text/TextFiles",
-    '.doc' : "/Documents/Text/Microsoft/Word",
-    '.docx' : "/Documents/Text/Microsoft/Word",
-    '.odt ' : "/Documents/Text/TextFiles",
-    '.pdf': "/Documents/Text/PDF",
-    '.rtf': "/Documents/Text/TextFiles",
-    '.tex': "/Documents/Text/TextFiles",
-    '.wks ': "/Documents/Text/TextFiles",
-    '.wps': "/Documents/Text/TextFiles",
-    '.wpd': "/Documents/Text/TextFiles",
 #Video
     '.3g2': "/Video",
     '.3gp': "/Video",
