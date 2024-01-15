@@ -12,54 +12,53 @@ desktop = pathlib.Path.home() / 'Desktop'
 
 # Destination directory folder path
 baseDestinationPath = 'C:/Users/arnol'
+       
+class WatchFolder:
+    """Watch user's desktop folder and move appropriate location."""
 
-now = datetime.now()
-year = now.strftime("%Y")
-month = now.strftime("%m")
+# Initialize Watcher
+    def __init__(self, directory='.', handler = FileSystemEventHandler()):
+        self.observer = Observer()
+        self.directory = directory
+        self.handler = handler    
+        print("Watcher initialized")    
 
-year_exists = False
-month_exists = False
+# Run Watcher to observe directory on a schedule
+    def run(self):
+        self.observer.schedule(self.handler,self.directory,recursive=True)
+        self.observer.start()
+        print("Watcher Running in {}/".format(self.directory))
+        try:
+            while True:
+                time.sleep(1)
+        except:
+            self.observer.stop()
+        self.observer.join()
+        print("\nWatcher Terminated\n")
 
-for files in desktop.glob('*'):
-    for extensions in extensions_folders.keys():
-        path = extensions_folders[extensions]
-        if extensions == files.suffix:
-            destinationPath = baseDestinationPath + path
-            yearPath = destinationPath + '/' + year
-            monthPath = yearPath + '/' + month
-            if pathlib.Path(yearPath).exists():
-                year_exists = True
-            else: pathlib.Path(yearPath).mkdir(parents=True, exist_ok=False)
-            if pathlib.Path(monthPath).exists():
-                month_exists = True
-            else: pathlib.Path(monthPath).mkdir(parents=True, exist_ok=False)
-            shutil.move(files, monthPath)
-            
+class MyEventHandler(FileSystemEventHandler):
+    def on_modified(self, event):
+        # Date and time
+        now = datetime.now()
+        year = now.strftime("%Y")
+        month = now.strftime("%m")
+        
+        # Year check
+        year_exists = False
+        month_exists = False
 
-
-# class WatchFolder:
-#     """Watch user's desktop folder and move appropriate location."""
-
-# # Initialize Watcher
-#     def __init__(self, directory='.', handler = FileSystemEventHandler()):
-#         self.observer = Observer()
-#         self.directory = directory
-#         self.handler = handler    
-#         print("Watcher initialized")    
-
-# # Run Watcher to observe directory on a schedule
-#     def run(self):
-#         self.observer.schedule(self.handler,self.directory,recursive=True)
-#         self.observer.start()
-#         print("Watcher Running in {}/".format(self.directory))
-#         try:
-#             while True:
-#                 time.sleep(1)
-#         except:
-#             self.observer.stop()
-#         self.observer.join()
-#         print("\nWatcher Terminated\n")
-
-# class MyEventHandler(FileSystemEventHandler):
-#     def on_modified(self, event):
-#       print()
+        # Loop through files on desktop and extensions dict
+        for files in desktop.glob('*'):
+            for extensions in extensions_folders.keys():
+                path = extensions_folders[extensions]
+                if extensions == files.suffix:
+                    destinationPath = baseDestinationPath + path
+                    yearPath = destinationPath + '/' + year
+                    monthPath = yearPath + '/' + month
+                    if pathlib.Path(yearPath).exists():
+                        year_exists = True
+                    else: pathlib.Path(yearPath).mkdir(parents=True, exist_ok=False)
+                    if pathlib.Path(monthPath).exists():
+                        month_exists = True
+                    else: pathlib.Path(monthPath).mkdir(parents=True, exist_ok=False)
+                    shutil.move(files, monthPath)

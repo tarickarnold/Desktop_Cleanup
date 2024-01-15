@@ -97,6 +97,7 @@ extensions_folders = {
     '.tar': "/Documents/Programming/Database",
     '.xml': "/Documents/Programming/Database",
     '.json': "/Documents/Programming/Database",
+    '.accdb':"/Documents/Programming/Database",
 #Executables
     '.apk': "/Documents/Other/Executables",
     '.bat': "/Documents/Other/Executables",
