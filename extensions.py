@@ -12,6 +12,8 @@ extensions_folders = {
     '.wks ': "/Documents/Text/TextFiles",
     '.wps': "/Documents/Text/TextFiles",
     '.wpd': "/Documents/Text/TextFiles",
+    '.lp4': "/Documents/Text/TextFiles",
+    '.indd': "/Documents/Text/TextFiles",
 #Audio
     '.aif' : "/Music/Media/Audio",
     '.cda' : "/Music/Media/Audio",
@@ -147,4 +149,6 @@ extensions_folders = {
     '.msi' : "/Documents/Text/Other/System",
     '.sys' : "/Documents/Text/Other/System",
     '.tmp' : "/Documents/Text/Other/System",
+    '.qpkg': "/Documents/Text/Other/System",
+    '.crt' : "/Documents/Text/Other/System",
 }
