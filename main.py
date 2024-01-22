@@ -15,7 +15,8 @@ desktop = pathlib.Path.home() / 'Desktop'
 
 # Destination directory folder path
 baseDestinationPath = 'C:/Users/arnol'
-       
+
+
 class WatchFolder:
     """Watch user's desktop folder and move appropriate location."""
 
@@ -28,7 +29,7 @@ class WatchFolder:
 
 # Run Watcher to observe directory on a schedule
     def run(self):
-        self.observer.schedule(self.handler,self.directory,recursive=True)
+        self.observer.schedule(self.handler,self.directory,recursive=False)
         self.observer.start()
         print("Watcher Running in {}/".format(self.directory))
         try:
@@ -66,7 +67,11 @@ class MyEventHandler(FileSystemEventHandler):
                         month_exists = True
                     else: pathlib.Path(monthPath).mkdir(parents=True, exist_ok=False)
                     shutil.move(files, monthPath)
+
+    def uniqueName(self):
+        newName = 
     
  
+
 
 
