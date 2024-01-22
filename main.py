@@ -7,42 +7,39 @@ from extensions import extensions_folders
 from datetime import datetime
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-
-
-
+#
 # Source directory folder path goes here
 desktop = pathlib.Path.home() / 'Desktop'
-
 # Destination directory folder path
-baseDestinationPath = 'C:/Users/arnol'
-
+baseDestinationPath = 'C:/Users/Tarick Arnold'   
 
 class WatchFolder:
     """Watch user's desktop folder and move appropriate location."""
 
 # Initialize Watcher
-    def __init__(self, directory= desktop, handler = FileSystemEventHandler()):
+    def __init__(self, desktop = desktop, handler = FileSystemEventHandler()):
         self.observer = Observer()
-        self.directory = directory
-        self.handler = handler    
-        print("Watcher initialized")    
+        self.desktop = desktop
+        self.handler = handler   
+        ic("Watcher initialized")    
 
 # Run Watcher to observe directory on a schedule
     def run(self):
-        self.observer.schedule(self.handler,self.directory,recursive=False)
+        self.observer.schedule(self.handler,self.desktop,recursive=True)
         self.observer.start()
-        print("Watcher Running in {}/".format(self.directory))
+        ic("Watcher Running in {}".format(self.desktop))
         try:
             while True:
                 time.sleep(100)
-        except:
+        except: 
             self.observer.stop()
         self.observer.join()
-        print("\nWatcher Terminated\n")
+        ic("\nWatcher Terminated\n")
 
 class MyEventHandler(FileSystemEventHandler):
     """Perform moving of file if they have been modified from desktop to respective folder."""
     def on_modified(self, event):
+       
         # Date and time
         now = datetime.now()
         year = now.strftime("%Y")
@@ -67,11 +64,11 @@ class MyEventHandler(FileSystemEventHandler):
                         month_exists = True
                     else: pathlib.Path(monthPath).mkdir(parents=True, exist_ok=False)
                     shutil.move(files, monthPath)
+                    ic("Files were moved successfully!")
 
-    def uniqueName(self):
-        newName = 
-    
- 
+if __name__ == '__main__':
+    Watchdog = WatchFolder()
+    Watchdog.run()
 
 
 
