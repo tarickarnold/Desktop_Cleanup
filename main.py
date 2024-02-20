@@ -8,40 +8,34 @@ from datetime import datetime
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-
-
-# baseDestinationPath = 'C:/Users/Tarick Arnold'
+desktop = pathlib.Path.home() / 'Desktop'
+baseDestinationPath = str(pathlib.Path.home())
 
 class Watcher:
-    """Watch user's desktop folder and move appropriate location."""
-    # Source directory folder path goes here
-    desktop = pathlib.Path.home() / 'Desktop'
 
-# Initialize Watcher
-    def __init__(self):
-        self.observer = Observer()  
-        ic("Watcher initialized")    
+    def __init__(self, directory=".", handler=FileSystemEventHandler()):
+        self.observer = Observer()
+        self.handler = handler
+        self.directory = directory
 
-# Run Watcher to observe directory on a schedule
     def run(self):
-        event_handler = Handler()
-        self.observer.schedule(event_handler,self.desktop,recursive=True)
+        self.observer.schedule(
+            self.handler, self.directory, recursive=True)
         self.observer.start()
-        ic("Watcher Running in {}".format(self.desktop))
+        print("\nWatcher Running in {}/\n".format(self.directory))
         try:
             while True:
                 time.sleep(1)
-        except: 
+        except:
             self.observer.stop()
         self.observer.join()
-        ic("\nWatcher Terminated\n")
+        print("\nWatcher Terminated\n")
 
-class Handler(FileSystemEventHandler):
-    """Perform moving of file if they have been modified from desktop to respective folder."""
-    def on_modified(self, event):
-        time.sleep(1)
-        
-        # Date and time
+
+class MyHandler(FileSystemEventHandler):
+
+    def on_any_event(self, event):
+        #Date and time
         now = datetime.now()
         year = now.strftime("%Y")
         month = now.strftime("%m")
@@ -67,15 +61,8 @@ class Handler(FileSystemEventHandler):
                     shutil.move(files, monthPath)
                     ic("Files were moved successfully!")
 
-if __name__ == '__main__':
-    # Source directory folder path goes here
-    desktop = pathlib.Path.home() / 'Desktop'
-    # Destination directory folder path
-    baseDestinationPath = str(pathlib.Path.home())
-    
-    Watchdog = Watcher()
-    Watchdog.run()
-
- 
+if __name__=="__main__":
+    w = Watcher(".", MyHandler())
+    w.run()
 
 
