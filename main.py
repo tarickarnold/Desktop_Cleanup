@@ -19,7 +19,7 @@ def MakeUnique(Source: Path, DestinationPath: Path):
         while True:
             Counter += 1
             NewName = DestinationPath / f'{Source.stem}_{Counter}{Source.suffix}'
-            if not Path.exists():
+            if not NewName.exists():
                 return NewName
     else: 
         return DestinationPath / Source.name
