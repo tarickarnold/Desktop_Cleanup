@@ -1,6 +1,6 @@
 import shutil
 import time
-import pathlib
+from pathlib import Path
 from icecream import ic
 from rich import print
 from extensions import extensions_folders
@@ -8,96 +8,51 @@ from datetime import datetime
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+def AddDatePath(Path):
+    DatePath = Path / f'{datetime.today().year}' / f'{datetime.today().month:02d}'
+    DatePath.mkdir(parents=True, exist_ok=True)
+    return DatePath
 
-def MakeUnique(DestinationPath, Name):
-    Counter = 0
-    while True:
-        Counter += 1
-        Path = DestinationPath / Name.format(Counter)
-        if not Path.exists():
-            return Path
+def MakeUnique(Source: Path, DestinationPath: Path):
+    if Path(DestinationPath / Source.name).exists():
+        Counter = 0
+        while True:
+            Counter += 1
+            NewName = DestinationPath / f'{Source.stem}_{Counter}{Source.suffix}'
+            if not Path.exists():
+                return NewName
+    else: 
+        return DestinationPath / Source.name
     
-def MoveFile(DestinationPath, Entry, Name):
-    if pathlib.Path.exists(f"{DestinationPath}/{Name}"):
-        UniqueName = MakeUnique(DestinationPath, Name)
-        OldName = pathlib.Path.joinpath(DestinationPath, Name)
-        NewName = pathlib.Path.joinpath(DestinationPath, UniqueName)
-        pathlib.Path.rename(OldName,NewName)
-    shutil.move(Entry,DestinationPath)
+class Handler(FileSystemEventHandler):
 
-class Watcher:
+    def __init__(self, Directory: Path, destination_root: Path):
+        self.Directory = Directory.resolve()
+        self.destination_root = destination_root.resolve()
 
-    def __init__(self, Directory, Handler=FileSystemEventHandler()):
-        self.observer = Observer()
-        self.handler = Handler
-        self.directory = Directory
-
-    def run(self):
-        self.observer.schedule(
-            self.handler, self.directory, recursive=True)
-        self.observer.start()
-        print("\nWatcher Running in {}/\n".format(self.directory))
-        try:
-            while True:
-                time.sleep(1)
-        except:
-            self.observer.stop()
-        self.observer.join()
-        print("\nWatcher Terminated\n")
-
-class MyHandler(FileSystemEventHandler):
-
-    def on_modified(self, DestinationPath, BaseDestinationPath, event):
-        for Name in Directory.interdir():
-            if Name.is_file() and Name.suffix.lower() in extensions_folders:
-                DestinationPath = MakeUnique(DestinationPath, Name)
-                MoveFile(DestinationPath, Name)
+    def on_modified(self, event):
+        for child in self.Directory.iterdir():
+            # skips directories and non-specified extensions
+            if child.is_file() and child.suffix.lower() in extensions_folders:
+                DestinationPath = self.destination_root / extensions_folders[child.suffix.lower()]
+                DestinationPath = AddDatePath(Path=DestinationPath)
+                DestinationPath = MakeUnique(Source=child, DestinationPath=DestinationPath)
+                shutil.move(src=child, dst=DestinationPath)
         
 if __name__=="__main__":
-    Directory = pathlib.Path.home() / 'Desktop'
-    BaseDestinationPath = str(pathlib.Path.home())
-    DestinationPath = BaseDestinationPath / f'{datetime.today().year}' / f'{datetime.today().month:02d}'
-    w = Watcher(Directory, MyHandler())
-    w.run()        
+    Directory = Path.home() / 'Desktop'
+    destination_root = Path.home()
+    EventHandler = Handler(Directory=Directory, destination_root=destination_root)
 
+    observer = Observer()
+    observer.schedule(EventHandler, f'{Directory}', recursive=True)
+    observer.start()
 
-
-
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
         
-        
-        
-        
-        
-        
-        
-#Date and time
-#         now = datetime.now()
-#         year = now.strftime("%Y")
-#         month = now.strftime("%m")
-        
-#         # Year check
-#         year_exists = False
-#         month_exists = False
-
-#         # Loop through files on desktop and extensions dict
-#         for files in desktop.glob('*'):
-#             for extensions in extensions_folders.keys():
-#                 path = extensions_folders[extensions]
-#                 if extensions == files.suffix:
-#                     destinationPath = baseDestinationPath + path
-#                     yearPath = destinationPath + '/' + year
-#                     monthPath = yearPath + '/' + month
-#                     if pathlib.Path(yearPath).exists():
-#                         year_exists = True
-#                     else: pathlib.Path(yearPath).mkdir(parents=True, exist_ok=False)
-#                     if pathlib.Path(monthPath).exists():
-#                         month_exists = True
-#                     else: pathlib.Path(monthPath).mkdir(parents=True, exist_ok=False)
-#                     shutil.move(files, monthPath)
-#                     ic("Files were moved successfully!")
-
-# if __name__=="__main__":
-    # w = Watcher(Directory, MyHandler())
-    # w.run()
-
 
