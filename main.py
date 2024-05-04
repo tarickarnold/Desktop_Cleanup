@@ -1,8 +1,6 @@
 import shutil
 import time
 from pathlib import Path
-from icecream import ic
-from rich import print
 from extensions import extensions_folders
 from datetime import datetime
 from watchdog.observers import Observer
